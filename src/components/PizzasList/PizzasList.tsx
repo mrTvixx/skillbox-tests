@@ -1,4 +1,5 @@
 import { IPizza } from '../../types/pizza';
+import { ListItem } from '../ListItem';
 import './styles.css';
 
 interface IProps {
@@ -17,26 +18,7 @@ export const PizzasList = ({ pizzasList }: IProps) => {
         </tr>
       </thead>
       <tbody>
-        {pizzasList.map((pizza) => (
-          <tr key={pizza.id} className="list">
-            <td>
-              {pizza.name}
-            </td>
-            <td>
-              {pizza.size}
-            </td>
-            <td>
-              {pizza.ingredients.reduce((acc, item) => acc + item.kcal, 0)}
-            </td>
-            <td>
-              <ul>
-                {pizza.ingredients.map((item) => (
-                  <li key={item.id}>{`${item.name} (ккал ${item.kcal})`}</li>
-                ))}
-              </ul>
-            </td>
-          </tr>
-        ))}
+        {pizzasList.map((pizza) => <ListItem key={pizza.id} pizza={pizza} />)}
       </tbody>
     </table>
   )

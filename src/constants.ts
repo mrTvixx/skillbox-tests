@@ -12,7 +12,7 @@ export const INGREDIENTS: IIngredient[] = [
     name: 'бекон',
     kcal: 350,
   },
-  {
+  { 
     id: 3,
     name: 'сыр',
     kcal: 500,

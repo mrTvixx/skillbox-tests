@@ -5,6 +5,9 @@ import { IPizza, TDough, TSize } from "../../types/pizza";
 import { CreateForm } from "../../components/CreateForm";
 import { INGREDIENTS } from '../../constants';
 import { PizzasList } from '../../components/PizzasList';
+import { isNameValid } from '../../utils/isNameValid';
+import { sendAnalytics } from '../../utils/sendAnalytics';
+import { getCurrentTime } from '../../utils/getCurrentTime';
 
 
 export const MainPageContainer = () => {
@@ -13,6 +16,12 @@ export const MainPageContainer = () => {
   const [dough, setDough] = useState<TDough>('толстое');
   const [ingredientsIds, setIngredientsIds] = useState<string[]>([]);
   const [pizzasList, setPizzasList] = useState<IPizza[]>([]);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  useEffect(() => {
+    const isValid = isNameValid(name);
+    setIsDisabled(!isValid);
+  }, [name]);
 
   const handleNameChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
     setName(target.value);
@@ -55,6 +64,7 @@ export const MainPageContainer = () => {
 
     setPizzasList(updatedList);
     savePizzas(updatedList);
+    sendAnalytics({ pizza, time: getCurrentTime() });
     resetForm();
   }, [size, name, dough, ingredientsIds, pizzasList, setPizzasList, resetForm])
 
@@ -67,6 +77,7 @@ export const MainPageContainer = () => {
       <CreateForm
         name={name}
         size={size}
+        disabled={isDisabled}
         dough={dough}
         ingredientsIds={ingredientsIds}
         handleDough={handleDough}

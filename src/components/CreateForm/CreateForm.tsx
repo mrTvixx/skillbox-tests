@@ -9,6 +9,7 @@ interface IProps {
   size: TSize;
   dough: TDough;
   ingredientsIds: string[];
+  disabled: boolean;
   handleNameChange(event: ChangeEvent<HTMLInputElement>): void;
   handleSize(event: ChangeEvent<HTMLSelectElement>): void;
   handleDough(event: ChangeEvent<HTMLSelectElement>): void;
@@ -20,6 +21,7 @@ export const CreateForm = ({
   name,
   size,
   dough,
+  disabled,
   ingredientsIds,
   handleDough,
   handleIngredients,
@@ -32,7 +34,7 @@ export const CreateForm = ({
       <div className="form-line">
         <label>
           Название:
-          <input onChange={handleNameChange} value={name} type="text" />
+          <input data-testid="NameInput" onChange={handleNameChange} value={name} type="text" />
         </label>
         
       </div>
@@ -40,7 +42,7 @@ export const CreateForm = ({
       <div className="form-line">
         <label>
           Тесто:
-          <select onSelect={handleDough} value={dough}>
+          <select onChange={handleDough} value={dough}>
             {
               DOUGHS.map((type, idx) => (
                 <option key={idx} value={type}>{type}</option>
@@ -77,7 +79,7 @@ export const CreateForm = ({
       </div>
 
       <div className="form-line">
-        <button onClick={onCreate}>Создать</button>
+        <button data-testid="CreateButton" disabled={disabled} onClick={onCreate}>Создать</button>
       </div>
     </form>  
   )
