@@ -12,4 +12,10 @@ describe('isNameValid', () => {
 
     expect(result).toBeFalsy();
   });
+
+  it('возвращает true, если название больше трех букв', () => {
+    const result = isNameValid('пицца');
+
+    expect(result).toBeTruthy();
+  });
 })
