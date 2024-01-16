@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState, MouseEvent } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState, FormEvent } from 'react';
 
 import { getPizzas, savePizzas } from "../../utils/localStorage";
 import { IPizza, TDough, TSize } from "../../types/pizza";
@@ -7,7 +7,7 @@ import { INGREDIENTS } from '../../constants';
 import { PizzasList } from '../../components/PizzasList';
 import { isNameValid } from '../../utils/isNameValid';
 import { sendAnalytics } from '../../utils/sendAnalytics';
-import { getCurrentTime } from '../../utils/getCurrentTime';
+import { prepareAnalytics } from '../../utils/prepareAnalytics';
 
 
 export const MainPageContainer = () => {
@@ -48,12 +48,12 @@ export const MainPageContainer = () => {
     setIngredientsIds([]);
   }, []);
 
-  const onCreate = useCallback((event: MouseEvent<HTMLElement>) => {
+  const onCreate = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const ingredients = INGREDIENTS.filter((item) => ingredientsIds.includes(String(item.id)));
     const pizza: IPizza = {
-      id: pizzasList.length,
+      id: Date.now(),
       name,
       size,
       dough,
@@ -64,9 +64,16 @@ export const MainPageContainer = () => {
 
     setPizzasList(updatedList);
     savePizzas(updatedList);
-    sendAnalytics({ pizza, time: getCurrentTime() });
+    const analitycData = prepareAnalytics(pizza)
+    sendAnalytics(analitycData);
     resetForm();
   }, [size, name, dough, ingredientsIds, pizzasList, setPizzasList, resetForm])
+
+  const onPizzaDelete = useCallback((id: number) => {
+    const filteredList = pizzasList.filter(item => item.id !== id);
+    savePizzas(filteredList);
+    setPizzasList(filteredList);
+  }, [pizzasList])
 
   useEffect(() => {
     setPizzasList(getPizzas())
@@ -88,6 +95,7 @@ export const MainPageContainer = () => {
       />
       <PizzasList 
         pizzasList={pizzasList}
+        onPizzaDelete={onPizzaDelete}
       />
     </>
   )

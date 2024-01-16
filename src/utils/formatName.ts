@@ -1,5 +1,5 @@
 export const formatName = (name: string) => {
-  if (!name) {
+  if (!name || name.includes('script')) {
     return 'Вкусная пицца ❤️'
   }
 

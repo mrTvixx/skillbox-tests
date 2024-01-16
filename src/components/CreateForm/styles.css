@@ -8,3 +8,7 @@
     justify-content: space-between;
   }
 }
+
+.create-button:disabled {
+  cursor: not-allowed;
+}

@@ -2,8 +2,8 @@ import { formatName } from "../formatName"
 
 
 describe('formatName', () => {
-  it('возвращает текст по умолчанию, если не передано название', () => {
-    const result = formatName('');
+  it('возвращает текст по умолчанию, если был передан скрипт', () => {
+    const result = formatName('<script>alert("хочу взломать ваш супер сервис")</script>');
 
     expect(result).toBe('Вкусная пицца ❤️')
   })

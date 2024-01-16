@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import { DOUGHS, INGREDIENTS, SIZES } from "../../constants";
 import { TDough, TSize } from "../../types/pizza";
 
@@ -14,7 +14,7 @@ interface IProps {
   handleSize(event: ChangeEvent<HTMLSelectElement>): void;
   handleDough(event: ChangeEvent<HTMLSelectElement>): void;
   handleIngredients(event: ChangeEvent<HTMLSelectElement>): void;
-  onCreate(event: MouseEvent<HTMLElement>): void;
+  onCreate(event: FormEvent<HTMLFormElement>): void;
 }
 
 export const CreateForm = ({
@@ -30,7 +30,7 @@ export const CreateForm = ({
   onCreate,
 }: IProps) => {
   return (
-    <form>
+    <form onSubmit={onCreate}>
       <div className="form-line">
         <label>
           Название:
@@ -54,7 +54,7 @@ export const CreateForm = ({
 
       <div className="form-line">
         <label>
-          Размера:
+          Размер:
           <select onChange={handleSize} value={size}>
             {
               SIZES.map((type, idx) => (
@@ -67,7 +67,7 @@ export const CreateForm = ({
 
       <div className="form-line">
         <label>
-          Размер:
+          Ингредиенты:
           <select onChange={handleIngredients} multiple value={ingredientsIds}>
             {
               INGREDIENTS.map((ingredient, idx) => (
@@ -79,7 +79,7 @@ export const CreateForm = ({
       </div>
 
       <div className="form-line">
-        <button data-testid="CreateButton" disabled={disabled} onClick={onCreate}>Создать</button>
+        <button data-testid="CreateButton" type="submit" className="create-button" disabled={disabled}>Создать</button>
       </div>
     </form>  
   )

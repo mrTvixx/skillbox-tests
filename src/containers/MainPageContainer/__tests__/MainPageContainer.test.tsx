@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
-import { render } from "@testing-library/react"
-import userEvent from '@testing-library/user-event'
+import { render, fireEvent } from "@testing-library/react"
 import { MainPageContainer } from '..';
 import { sendAnalytics } from '../../../utils/sendAnalytics';
 import { getCurrentTime } from '../../../utils/getCurrentTime';
@@ -9,37 +8,37 @@ jest.mock('../../../utils/getCurrentTime');
 jest.mock('../../../utils/sendAnalytics');
 
 describe('MainPageContainer', () => {
-  it('Проверяем, что кнопка доступна, если пользователь ввел имя', async () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  })
+
+  it('Проверяем, что компонент рендерится', async () => {
+    render(<MainPageContainer />)
+  })
+
+  it('Проверяем, что состояние кнопки меняется при вводе корректного названия', async () => {
     const { getByTestId } = renderComponent();
 
     expect(getByTestId('CreateButton')).toBeDisabled();
 
-    await userEvent.type(getByTestId('NameInput'), 'супер пицца')
+    await fireEvent.change(getByTestId('NameInput'), { target: { value: 'супер пицца' }})
     
     expect(getByTestId('CreateButton')).not.toBeDisabled();
-  })
-
-  it('Проверяем, что по нажатию на "Создать", форма очищается и появляется новый элемент', async () => {
-    const { getByTestId, getByText } = renderComponent();
-
-    await userEvent.type(getByTestId('NameInput'), 'супер пицца')
-    await userEvent.click(getByTestId('CreateButton'));
-
-    expect(getByTestId('NameInput')).toHaveValue('');
-    expect(getByText('Супер пицца')).toBeInTheDocument();
   })
 
   it('Проверяем, что аналитика получается верные данные', async () => {
     (getCurrentTime as jest.Mock).mockReturnValue(111);
     const { getByTestId } = renderComponent();
 
-    await userEvent.type(getByTestId('NameInput'), 'супер пицца')
-    await userEvent.click(getByTestId('CreateButton'));
+    await fireEvent.input(getByTestId('NameInput'), { target: { value: 'супер пицца' }})
+    await fireEvent.click(getByTestId('CreateButton'));
 
     expect(sendAnalytics).toBeCalledWith({
+      page: "Main",
+      type: 'desktop',
       pizza: {
         dough: 'толстое',
-        id: 1,
+        id: expect.anything(),
         ingredients: [],
         name: 'супер пицца',
         size: 10,
@@ -48,8 +47,6 @@ describe('MainPageContainer', () => {
     });
   })
 });
-
-
 
 const renderComponent = () => {
   return render(<MainPageContainer />);

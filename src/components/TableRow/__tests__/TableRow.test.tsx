@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
-import { ListItem } from '../ListItem';
+import { TableRow } from '../TableRow';
 import { IPizza } from '../../../types/pizza';
 
-describe('ListItem', () => {
-  it('Проверка корректного рендеринга элемента списка', () => {
+describe('Тест компонента TableRow', () => {
+  test('Проверка корректного рендеринга элемента списка', () => {
     const { container } = renderComponent();
 
     expect(container).toMatchSnapshot();
@@ -31,6 +31,7 @@ describe('ListItem', () => {
 })
 
 const defaultProps = {
+  onPizzaDelete: () => {},
   pizza: {
     id: 1,
     name: 'Вкусная пицца',
@@ -55,7 +56,7 @@ const renderComponent = (props = {}) => {
   return render(
     <table>
       <tbody>
-        <ListItem {...defaultProps} {...props} />
+        <TableRow {...defaultProps} {...props} />
       </tbody>
     </table>)
 }
