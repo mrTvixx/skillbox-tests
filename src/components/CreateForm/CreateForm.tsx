@@ -79,7 +79,7 @@ export const CreateForm = ({
       </div>
 
       <div className="form-line">
-        <button data-testid="CreateButton" type="submit" className="create-button" disabled={disabled}>Создать</button>
+        <button data-testid="CreateButton" type="submit" className="create-button">Создать</button>
       </div>
     </form>  
   )
